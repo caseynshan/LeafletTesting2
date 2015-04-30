@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en-US">
+    <head>
+	<style>
+#map {
+    width:900px;
+    height:500px;
+}
+</style>
+        <meta charset="utf-8">
+        <title>leaflet Test</title>
+ <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src="countries.geo.json" type="text/javascript"></script>
+  <!--  -->
+    </head>
+	
+    <body>
+      <div><text>test</text></div>
+	  <div id="map"></div>
+	  
+    </body>
+	<script type="text/javascript">
+	
+	window.onload = function () {
+			var map = L.map('map').setView([43,-89], 5);
+			L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+				attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+			}).addTo(map); 
+			
+			try {
+					var countryStyle = {
+					'color': '#000',
+					'weight': 1,
+					'opacity': 0.6
+					};
+
+					L.geoJson(countries, {
+						onEachFeature: popup,
+						style:countryStyle
+					}).addTo(map);
+				}
+				catch(ex) {
+					alert(ex);
+				}
+
+		function popup(feature, layer) {
+			if (feature.properties && feature.properties.name) {
+				layer.bindPopup(feature.properties.name);
+			}
+		}
+
+
+			//var map = L.map('map').setView([51.505, -0.09], 13);
+	};
+	</script>
+</html>
