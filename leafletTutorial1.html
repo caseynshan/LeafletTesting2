@@ -13,7 +13,7 @@
   top:10px;right:10px;
   z-index:1;
   border-radius:3px;
-  width:120px;
+  width:150px;
   border:1px solid rgba(0,0,0,0.4);
   }
   .menu-ui a {
@@ -59,10 +59,12 @@
       <div><text>test</text></div>
 	  <div id="map">
 	  	<nav id='map-ui' class='menu-ui'>
-    <a href='#' class='active' id='countriesGeoJson'>countriesGeoJson</a>
-    <a href='#' class='active' id='precipitationWMS'>precipitationWMS</a>
-	<a href='#' class='active' id='openStretMapBase'>openStretMapBase</a>
-	<a href='#' class='active' id='geologyEsriDyanmic'>geologyEsriDyanmic</a>
+		<a href='#' class='active' id='countriesGeoJson'>countries GeoJson</a>
+		<a href='#' class='active' id='precipitationWMS'>precipitation WMS</a>
+		<a href='#' class='active' id='openStretMapBase'>openStretMap Base</a>
+		<a href='#' class='active' id='geologyEsriDyanmic'>geology EsriDyanmic</a>
+		<a href='#' class='active' id='timeZonesEsriTiled'>timeZones EsriTiled</a>
+		<a href='#' class='active' id='damageAssesmentEsriFeature'>damageAssesment EsriFeature</a>
   </nav>
   </div>
 	  
@@ -76,27 +78,40 @@
 			
 			
 			try {
-					var countryStyle = {
+					var countryStyleOn = {
 					'color': '#000',
 					'weight': 1,
-					'opacity': 0.6
+					'opacity': 0.9
+					};
+					
+					var countryStyleOff = {
+					'color': '#000',
+					'weight': 1,
+					'opacity': 0.0
 					};
 
 						var openStretMapBase = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 						attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 					}).addTo(map); 
 					
+					var timeZonesEsriTiled = L.esri.tiledMapLayer("http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer", {
+					'opacity':.5}).addTo(map);
 					
+					
+					var damageAssesmentEsriFeature =  L.esri.featureLayer('http://sampleserver6.arcgisonline.com/arcgis/rest/services/Energy/Infrastructure/FeatureServer/0').addTo(map);
+					 
+					 
 					var countriesGeoJson = L.geoJson(countries, {
 						onEachFeature: popup,
-						style:countryStyle
+						style:countryStyleOn
 					}).addTo(map);
 					
 					
 					var precipitationWMS = L.tileLayer.wms('http://nowcoast.noaa.gov/wms/com.esri.wms.Esrimap/obs', {
 						format: 'image/png',
 						transparent: true,
-						layers: 'RAS_RIDGE_NEXRAD'
+						layers: 'RAS_RIDGE_NEXRAD',
+						opacity:.75
 					}).addTo(map);
 
 
@@ -113,11 +128,18 @@
 			document.getElementById('countriesGeoJson').onclick = function () {
 				var enable = this.className !== 'active';
 				//countriesGeoJson.setOpacity(enable ? 1 : 0);
+				
+				countriesGeoJson.eachLayer(function (layer) {  
+    
 					if(enable===1) {
-					fillOpacity=1;
-				} else {
-					fillOpacity=.25;
-				}
+						layer.setStyle(countryStyleOn);
+					} else {
+						layer.setStyle(countryStyleOff);
+					}
+				  
+				});
+
+					
 				
 				this.className = enable ? 'active' : '';
 				return false;
@@ -130,6 +152,7 @@
 				return false;
 			};
 
+			
 				document.getElementById('precipitationWMS').onclick = function () {
 				var enable = this.className !== 'active';
 				precipitationWMS.setOpacity(enable ? 1 : 0);
@@ -145,6 +168,19 @@
 				return false;
 			};
 			
+				document.getElementById('timeZonesEsriTiled').onclick = function () {
+				var enable = this.className !== 'active';
+				timeZonesEsriTiled.setOpacity(enable ? 1 : 0);
+				this.className = enable ? 'active' : '';
+				return false;
+			};
+			
+					document.getElementById('damageAssesmentEsriFeature').onclick = function () {
+				var enable = this.className !== 'active';
+				damageAssesmentEsriFeature.setOpacity(enable ? 1 : 0);
+				this.className = enable ? 'active' : '';
+				return false;
+			};
 
 
 		function popup(feature, layer) {
