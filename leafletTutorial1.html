@@ -51,6 +51,7 @@
  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
   <script src="countries.geo.json" type="text/javascript"></script>
+  <script src="pw.geo.json" type="text/javascript"></script>
   <script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
   <!--  -->
     </head>
@@ -60,6 +61,7 @@
 	  <div id="map">
 	  	<nav id='map-ui' class='menu-ui'>
 		<a href='#' class='active' id='countriesGeoJson'>countries GeoJson</a>
+		<a href='#' class='active' id='pwGeoJson'>PW Offices GeoJson</a>
 		<a href='#' class='active' id='precipitationWMS'>precipitation WMS</a>
 		<a href='#' class='active' id='openStretMapBase'>openStretMap Base</a>
 		<a href='#' class='active' id='geologyEsriDyanmic'>geology EsriDyanmic</a>
@@ -70,7 +72,8 @@
 	  
     </body>
 	<script type="text/javascript">
-	
+	"use strict"
+
 	window.onload = function () {
 			var map = L.map('map').setView([40,-110], 5);
 			
@@ -90,6 +93,27 @@
 					'opacity': 0.0
 					};
 
+
+					var pwStyleOn = {
+					    radius: 8,
+					    fillColor: "#458B00",
+					    color: "#000",
+					    weight: 1,
+					    opacity: 1,
+					    fillOpacity: 0.8
+					};
+
+					var pwStyleOff = {
+					    radius: 8,
+					    fillColor: "#458B00",
+					    color: "#000",
+					    weight: 1,
+					    opacity: 0,
+					    fillOpacity: 0.0
+					};
+
+				
+
 						var openStretMapBase = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 						attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 					}).addTo(map); 
@@ -105,7 +129,19 @@
 						onEachFeature: popup,
 						style:countryStyleOn
 					}).addTo(map);
+
+					// var pwGeoJson = L.geoJson(pw, {}).addTo(map);
 					
+
+				
+					var pwGeoJson = L.geoJson(pw, {
+						onEachFeature: popup,
+					    pointToLayer: function (feature, latlng) {
+					        return L.circleMarker(latlng, pwStyleOn);
+					    }
+					}).addTo(map);
+
+
 					
 					var precipitationWMS = L.tileLayer.wms('http://nowcoast.noaa.gov/wms/com.esri.wms.Esrimap/obs', {
 						format: 'image/png',
@@ -125,25 +161,45 @@
 				}
 				
 				// Layer switcher
+
+				var contriesGeoJsonSwitcher = document.getElementById('countriesGeoJson');
 			document.getElementById('countriesGeoJson').onclick = function () {
-				var enable = this.className !== 'active';
+				var enable = contriesGeoJsonSwitcher.className !== 'active';
 				//countriesGeoJson.setOpacity(enable ? 1 : 0);
 				
 				countriesGeoJson.eachLayer(function (layer) {  
     
-					if(enable===1) {
+					if(enable) {
 						layer.setStyle(countryStyleOn);
 					} else {
 						layer.setStyle(countryStyleOff);
 					}
 				  
-				});
-
-					
-				
+				});				
 				this.className = enable ? 'active' : '';
 				return false;
 			};
+
+			var pwGeoJsonSwitcher = document.getElementById('pwGeoJson');
+				document.getElementById('pwGeoJson').onclick = function () {
+				var enable = pwGeoJsonSwitcher.className !== 'active';
+				//countriesGeoJson.setOpacity(enable ? 1 : 0);
+				
+				pwGeoJson.eachLayer(function (layer) {  
+    
+				if(enable) {
+						layer.setStyle(pwStyleOn);
+					} else {
+						layer.setStyle(pwStyleOff);
+					}
+				  
+				});
+
+				this.className = enable ? 'active' : '';
+				return false;
+			};
+
+
 
 			document.getElementById('openStretMapBase').onclick = function () {
 				var enable = this.className !== 'active';
@@ -175,7 +231,7 @@
 				return false;
 			};
 			
-					document.getElementById('damageAssesmentEsriFeature').onclick = function () {
+			document.getElementById('damageAssesmentEsriFeature').onclick = function () {
 				var enable = this.className !== 'active';
 				damageAssesmentEsriFeature.setOpacity(enable ? 1 : 0);
 				this.className = enable ? 'active' : '';
@@ -188,6 +244,8 @@
 				layer.bindPopup(feature.properties.name);
 			}
 		}
+
+	
 
 
 			//var map = L.map('map').setView([51.505, -0.09], 13);
