@@ -58,10 +58,8 @@
     <title>leaflet Test</title>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-
     <script src="countries.geo.json" type="text/javascript"></script>
     <script src="pw.geo.json" type="text/javascript"></script>
-   <script src="centralAmericaCapitals.geo.json" type="text/javascript"></script>
     <script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
@@ -160,24 +158,20 @@
             }).addTo(map);
 
 
-             var capitalCitiesGeoJson = L.geoJson(capitalCities, {  
-                style: countryStyleOn                      
-            }).addTo(map);
+            var capitalCitiesGeoJson;
+            $(document).ready(function() {
+                $.ajax({
+                    url: "http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo"
+                }).then(function(data) {
 
-            // var capitalCitiesGeoJson;
-            // $(document).ready(function() {
-            //     $.ajax({
-            //         url: "http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo"
-            //     }).then(function(data) {
-
-            //         capitalCitiesGeoJson = L.geoJson(pw, {
-            //             onEachFeature: popup,
-            //             pointToLayer: function(feature, latlng) {
-            //                 return L.circleMarker(latlng, pwStyleOn);
-            //             }
-            //         }).addTo(map);                  
-            //     });
-            // });
+                    capitalCitiesGeoJson = L.geoJson(pw, {
+                        onEachFeature: popup,
+                        pointToLayer: function(feature, latlng) {
+                            return L.circleMarker(latlng, pwStyleOn);
+                        }
+                    }).addTo(map);                  
+                });
+            });
 
           
 

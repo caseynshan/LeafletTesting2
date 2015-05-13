@@ -1,0 +1,32 @@
+var capitalCities={
+   "geonames": [
+      {
+         "fcodeName": "capital of a political entity",
+         "toponymName": "Mexico City",
+         "countrycode": "MX",
+         "fcl": "P",
+         "fclName": "city, village,...",
+         "name": "Mexiko-Stadt",
+         "wikipedia": "en.wikipedia.org/wiki/Mexico_City",
+         "lng": -99.12766,
+         "fcode": "PPLC",
+         "geonameId": 3530597,
+         "lat": 19.428473,
+         "population": 12294193
+      },
+      {
+         "fcodeName": "capital of a political entity",
+         "toponymName": "Beijing",
+         "countrycode": "CN",
+         "fcl": "P",
+         "fclName": "city, village,...",
+         "name": "Peking",
+         "wikipedia": "en.wikipedia.org/wiki/Beijing",
+         "lng": 116.39723,
+         "fcode": "PPLC",
+         "geonameId": 1816670,
+         "lat": 39.907497,
+         "population": 11716620
+      }     
+   ]
+}
