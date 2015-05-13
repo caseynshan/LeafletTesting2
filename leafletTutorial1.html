@@ -61,6 +61,7 @@
 
     <script src="countries.geo.json" type="text/javascript"></script>
     <script src="pw.geo.json" type="text/javascript"></script>
+     <script src="yellowstoneBuildingCentroids.geo.json" type="text/javascript"></script>
    <!--<script src="centralAmericaCapitals.geo.json" type="text/javascript"></script>-->
     <script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -128,6 +129,17 @@
                         fillOpacity: 0.0
                     };
 
+
+                        var yellowStoneStyleOn = {
+                        radius: 8,
+                        fillColor: '#ff0000',
+                        color: '#000',
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    };
+
+
           
 
 
@@ -159,6 +171,17 @@
                 }
             }).addTo(map);
 
+            var yellowstoneBuilding = yellowstoneBuildings;
+            
+            var yellowstoneBuildingGeoJson = L.geoJson(yellowstoneBuilding, {  
+                 pointToLayer: function(feature, latlng) {
+                    return L.circleMarker(latlng, yellowStoneStyleOn);
+                }                  
+            }).addTo(map);
+
+
+
+
 
             //  var capitalCitiesGeoJson = L.geoJson(capitalCities, {  
             //     style: countryStyleOn                      
@@ -167,19 +190,21 @@
 
 
 
-            var jqxhr = $.ajax( "http://gcaseycupp.github.io/LeafletTesting2/centralAmericaCapitals.geo.json" )
+            var jqxhr = $.ajax( "http://gcaseycupp.github.io/LeafletTesting2/centralAmericaCapitalsNoVar.geo.json" )
               .success(function(data) {
-                        alert("in success");
-                     //    capitalCitiesGeoJson = L.geoJson(data, {
-                     //     style: countryStyleOn         
-                     //    }
-                     // }).addTo(map);         
+                      //  alert("in success");
+                        var capitalCities=data;
+                    
+             var capitalCitiesGeoJson = L.geoJson(capitalCities, {  
+                style: countryStyleOn                      
+            }).addTo(map);
+      
               })
               .fail(  function(XMLHttpRequest, textStatus, errorThrown) {
                 alert("some error : " + errorThrown);
                 })
               .always(function() {
-                alert( "complete" );
+               // alert( "complete" );
               });
 
 
