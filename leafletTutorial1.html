@@ -61,7 +61,7 @@
 
     <script src="countries.geo.json" type="text/javascript"></script>
     <script src="pw.geo.json" type="text/javascript"></script>
-   <script src="centralAmericaCapitals.geo.json" type="text/javascript"></script>
+   <!--<script src="centralAmericaCapitals.geo.json" type="text/javascript"></script>-->
     <script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
@@ -160,24 +160,42 @@
             }).addTo(map);
 
 
-             var capitalCitiesGeoJson = L.geoJson(capitalCities, {  
-                style: countryStyleOn                      
-            }).addTo(map);
+            //  var capitalCitiesGeoJson = L.geoJson(capitalCities, {  
+            //     style: countryStyleOn                      
+            // }).addTo(map);
+
+
+
+
+            var jqxhr = $.ajax( "http://gcaseycupp.github.io/LeafletTesting2/centralAmericaCapitals.geo.json" )
+              .success(function(data) {
+                        alert("in success");
+                     //    capitalCitiesGeoJson = L.geoJson(data, {
+                     //     style: countryStyleOn         
+                     //    }
+                     // }).addTo(map);         
+              })
+              .fail(  function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("some error : " + errorThrown);
+                })
+              .always(function() {
+                alert( "complete" );
+              });
+
 
             // var capitalCitiesGeoJson;
-            // $(document).ready(function() {
+            // //$(document).ready(function() {
             //     $.ajax({
-            //         url: "http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo"
+            //         url: "http://gcaseycupp.github.io/LeafletTesting2/centralAmericaCapitals.geo.json"
             //     }).then(function(data) {
 
-            //         capitalCitiesGeoJson = L.geoJson(pw, {
-            //             onEachFeature: popup,
-            //             pointToLayer: function(feature, latlng) {
-            //                 return L.circleMarker(latlng, pwStyleOn);
-            //             }
-            //         }).addTo(map);                  
+            //         alert(data);
+            //         // capitalCitiesGeoJson = L.geoJson(data, {
+            //         //     style: countryStyleOn         
+            //         //     }
+            //         // }).addTo(map);                  
             //     });
-            // });
+           // });
 
           
 
