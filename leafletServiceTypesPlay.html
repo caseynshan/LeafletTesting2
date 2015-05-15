@@ -11,7 +11,7 @@
         .menu-ui {
             background: #fff;
             position: absolute;
-            top: 10px;
+            bottom: 10px;
             right: 10px;
             z-index: 1;
             border-radius: 3px;
@@ -46,7 +46,7 @@
         }
         
         .menu-ui a.active {
-            background: #3887BE;
+            background: #29ae6e;
             color: #FFF;
         }
         
@@ -56,10 +56,14 @@
     </style>
     <meta charset="utf-8">
     <title>leaflet Test</title>
+    <script src="js/require.js" data-main="js/main.js"></script>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-    <script src="countries.geo.json" type="text/javascript"></script>
-    <script src="pw.geo.json" type="text/javascript"></script>
+
+    <script src="data/countries.geo.json" type="text/javascript"></script>
+    <script src="data/pw.geo.json" type="text/javascript"></script>
+     <script src="data/yellowstoneBuildingCentroids.geo.json" type="text/javascript"></script>
+   <!--<script src="centralAmericaCapitals.geo.json" type="text/javascript"></script>-->
     <script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
@@ -126,6 +130,17 @@
                         fillOpacity: 0.0
                     };
 
+
+                        var yellowStoneStyleOn = {
+                        radius: 8,
+                        fillColor: '#ff0000',
+                        color: '#000',
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    };
+
+
           
 
 
@@ -157,21 +172,57 @@
                 }
             }).addTo(map);
 
+            var yellowstoneBuilding = yellowstoneBuildings;
+            
+            var yellowstoneBuildingGeoJson = L.geoJson(yellowstoneBuilding, {  
+                 pointToLayer: function(feature, latlng) {
+                    return L.circleMarker(latlng, yellowStoneStyleOn);
+                }                  
+            }).addTo(map);
 
-            var capitalCitiesGeoJson;
-            $(document).ready(function() {
-                $.ajax({
-                    url: "http://api.geonames.org/citiesJSON?north=44.1&south=-9.9&east=-22.4&west=55.2&lang=de&username=demo"
-                }).then(function(data) {
 
-                    capitalCitiesGeoJson = L.geoJson(pw, {
-                        onEachFeature: popup,
-                        pointToLayer: function(feature, latlng) {
-                            return L.circleMarker(latlng, pwStyleOn);
-                        }
-                    }).addTo(map);                  
-                });
-            });
+
+
+
+            //  var capitalCitiesGeoJson = L.geoJson(capitalCities, {  
+            //     style: countryStyleOn                      
+            // }).addTo(map);
+
+
+
+
+            var jqxhr = $.ajax( "http://gcaseycupp.github.io/LeafletTesting2/data/centralAmericaCapitalsNoVar.geo.json" )
+            // var jqxhr = $.ajax( "http://gcaseycupp.github.io/LeafletTesting2/centralAmericaCapitalsNoVar.geo.json" )
+              .success(function(data) {
+                      //  alert("in success");
+                        var capitalCities=data;
+                    
+             var capitalCitiesGeoJson = L.geoJson(capitalCities, {  
+                style: countryStyleOn                      
+            }).addTo(map);
+      
+              })
+              .fail(  function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("some error : " + errorThrown);
+                })
+              .always(function() {
+               // alert( "complete" );
+              });
+
+
+            // var capitalCitiesGeoJson;
+            // //$(document).ready(function() {
+            //     $.ajax({
+            //         url: "http://gcaseycupp.github.io/LeafletTesting2/centralAmericaCapitals.geo.json"
+            //     }).then(function(data) {
+
+            //         alert(data);
+            //         // capitalCitiesGeoJson = L.geoJson(data, {
+            //         //     style: countryStyleOn         
+            //         //     }
+            //         // }).addTo(map);                  
+            //     });
+           // });
 
           
 

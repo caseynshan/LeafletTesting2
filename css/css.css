@@ -1,0 +1,41 @@
+                var countryStyleOn = {
+                                            'color': '#000',
+                                            'weight': 1,
+                                            'opacity': 0.9
+                                        };
+
+                    var countryStyleOff = {
+                        'color': '#000',
+                        'weight': 1,
+                        'opacity': 0.0
+                    };
+
+
+                    var pwStyleOn = {
+                        radius: 8,
+                        fillColor: '#458B00',
+                        color: '#000',
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    };
+
+                    var pwStyleOff = {
+                        radius: 8,
+                        fillColor: '#458B00',
+                        color: '#000',
+                        weight: 1,
+                        opacity: 0,
+                        fillOpacity: 0.0
+                    };
+
+
+                        var yellowStoneStyleOn = {
+                        radius: 8,
+                        fillColor: '#ff0000',
+                        color: '#000',
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    };
+

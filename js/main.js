@@ -1,93 +1,15 @@
-<!doctype html>
-<html lang="en-US">
+require.config({
+	paths: {
+		jquery: 'jquery-2.1.1.min'
+		}
+	});
 
-<head>
-    <style>
-        #map {
-            width: 900px;
-            height: 500px;
-        }
-        
-        .menu-ui {
-            background: #fff;
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            z-index: 1;
-            border-radius: 3px;
-            width: 150px;
-            border: 1px solid rgba(0, 0, 0, 0.4);
-        }
-        
-        .menu-ui a {
-            font-size: 13px;
-            color: #404040;
-            display: block;
-            margin: 0;
-            padding: 0;
-            padding: 10px;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-            text-align: center;
-        }
-        
-        .menu-ui a:first-child {
-            border-radius: 3px 3px 0 0;
-        }
-        
-        .menu-ui a:last-child {
-            border: none;
-            border-radius: 0 0 3px 3px;
-        }
-        
-        .menu-ui a:hover {
-            background: #f8f8f8;
-            color: #404040;
-        }
-        
-        .menu-ui a.active {
-            background: #29ae6e;
-            color: #FFF;
-        }
-        
-        .menu-ui a.active:hover {
-            background: #3074a4;
-        }
-    </style>
-    <meta charset="utf-8">
-    <title>leaflet Test</title>
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+require(["jquery"],
+	function($) {
 
-    <script src="countries.geo.json" type="text/javascript"></script>
-    <script src="pw.geo.json" type="text/javascript"></script>
-     <script src="yellowstoneBuildingCentroids.geo.json" type="text/javascript"></script>
-   <!--<script src="centralAmericaCapitals.geo.json" type="text/javascript"></script>-->
-    <script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		window.alert('test');
 
-    <!--  -->
-</head>
-
-<body>
-    <div>
-        <text>test</text>
-    </div>
-    <div id="map">
-        <nav id='map-ui' class='menu-ui'>
-            <a href='#' class='active' id='countriesGeoJson'>countries GeoJson</a>
-            <a href='#' class='active' id='pwGeoJson'>PW Offices GeoJson</a>
-            <a href='#' class='active' id='precipitationWMS'>precipitation WMS</a>
-            <a href='#' class='active' id='openStretMapBase'>openStretMap Base</a>
-            <a href='#' class='active' id='geologyEsriDyanmic'>geology EsriDyanmic</a>
-            <a href='#' class='active' id='timeZonesEsriTiled'>timeZones EsriTiled</a>
-            <a href='#' class='active' id='damageAssesmentEsriFeature'>damageAssesment EsriFeature</a>
-        </nav>
-    </div>
-
-</body>
-<script type='text/javascript'>
-    'use strict';
+		 'use strict';
 
     window.onload = function() {
         var map = L.map('map').setView([40, -110], 5);
@@ -98,48 +20,7 @@
         try {
 
            
-                                    var countryStyleOn = {
-                                            'color': '#000',
-                                            'weight': 1,
-                                            'opacity': 0.9
-                                        };
-
-                    var countryStyleOff = {
-                        'color': '#000',
-                        'weight': 1,
-                        'opacity': 0.0
-                    };
-
-
-                    var pwStyleOn = {
-                        radius: 8,
-                        fillColor: '#458B00',
-                        color: '#000',
-                        weight: 1,
-                        opacity: 1,
-                        fillOpacity: 0.8
-                    };
-
-                    var pwStyleOff = {
-                        radius: 8,
-                        fillColor: '#458B00',
-                        color: '#000',
-                        weight: 1,
-                        opacity: 0,
-                        fillOpacity: 0.0
-                    };
-
-
-                        var yellowStoneStyleOn = {
-                        radius: 8,
-                        fillColor: '#ff0000',
-                        color: '#000',
-                        weight: 1,
-                        opacity: 1,
-                        fillOpacity: 0.8
-                    };
-
-
+                    
           
 
 
@@ -183,14 +64,8 @@
 
 
 
-            //  var capitalCitiesGeoJson = L.geoJson(capitalCities, {  
-            //     style: countryStyleOn                      
-            // }).addTo(map);
 
-
-
-
-            var jqxhr = $.ajax( "http://gcaseycupp.github.io/LeafletTesting2/centralAmericaCapitalsNoVar.geo.json" )
+            var jqxhr = $.ajax( "http://gcaseycupp.github.io/LeafletTesting2/data/centralAmericaCapitalsNoVar.geo.json" )
             // var jqxhr = $.ajax( "http://gcaseycupp.github.io/LeafletTesting2/centralAmericaCapitalsNoVar.geo.json" )
               .success(function(data) {
                       //  alert("in success");
@@ -208,25 +83,7 @@
                // alert( "complete" );
               });
 
-
-            // var capitalCitiesGeoJson;
-            // //$(document).ready(function() {
-            //     $.ajax({
-            //         url: "http://gcaseycupp.github.io/LeafletTesting2/centralAmericaCapitals.geo.json"
-            //     }).then(function(data) {
-
-            //         alert(data);
-            //         // capitalCitiesGeoJson = L.geoJson(data, {
-            //         //     style: countryStyleOn         
-            //         //     }
-            //         // }).addTo(map);                  
-            //     });
-           // });
-
           
-
-
-
 
             var precipitationWMS = L.tileLayer.wms('http://nowcoast.noaa.gov/wms/com.esri.wms.Esrimap/obs', {
                 format: 'image/png',
@@ -334,6 +191,6 @@
 
         //var map = L.map('map').setView([51.505, -0.09], 13);
     };
-</script>
+});
 
-</html>
+
