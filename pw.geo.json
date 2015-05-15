@@ -1,0 +1,53 @@
+var pw ={
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#008000",
+        "marker-size": "medium",
+        "marker-symbol": "oil-well",
+        "title": "PetroWEB Canada"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -114.08752441406249,
+          51.05002778118271
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#008000",
+        "marker-size": "medium",
+        "marker-symbol": "oil-well",
+        "title": "PetroWEB Headquarters"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -105.00024318695068,
+          39.752040277735624
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#008000",
+        "marker-size": "medium",
+        "marker-symbol": "oil-well",
+        "title": "PetroWEB Texas"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -95.570068359375,
+          29.66776926665284
+        ]
+      }
+    }
+  ]
+}
