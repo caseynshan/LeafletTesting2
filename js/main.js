@@ -20,37 +20,17 @@
  });
 
 
- define("createEsriTiled", ["jquery","toggleLayers"],
-     function($,toggleLayers) {
-
-     	var timeZonesEsriTiled;
-         function createEsriTiledLayer() {
-             timeZonesEsriTiled = L.esri.tiledMapLayer('http://sampleserver6.arcgisonline.com/arcgis/rest/services/WorldTimeZones/MapServer', {
-                 'opacity': 0.3
-             })
-             return timeZonesEsriTiled;
-         }
-
-         function hookupEsriTiledToggle() {
-             document.getElementById('timeZonesEsriTiled').onclick = function() {
-                 toggleLayers.toggleLayerbyOpacity(timeZonesEsriTiled);
-             };
-         }     
-
-
-         return {
-             createEsriTiledLayer: createEsriTiledLayer,
-             hookupEsriTiledToggle: hookupEsriTiledToggle
-
-         }
-
-     });
+ 
 
 
 
 
- define("app", ["jquery", "cssStylesToMove", "createEsriTiled"],
-     function($, cssStyles, createEsriTiled) {
+
+
+
+
+ define("app", ["jquery", "cssStylesToMove", "esriTiledLayers","geoJsonLayersFromFile"],
+     function($, cssStyles, esriTiledLayers,geoJsonLayersFromFile) {
          function buildUpMap() {
 
              //cssStyles.buildStyles();
@@ -65,9 +45,11 @@
                  attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
              }).addTo(map);
 
-    var tiledTimeZones = createEsriTiled.createEsriTiledLayer();
+            var tiledTimeZones = esriTiledLayers.createEsriTiledLayer();
              tiledTimeZones.addTo(map);
-             createEsriTiled.hookupEsriTiledToggle();
+             esriTiledLayers.hookupEsriTiledToggle();
+
+
 
 
              var damageAssesmentEsriFeatureLayer = L.esri.featureLayer('http://sampleserver6.arcgisonline.com/arcgis/rest/services/CommercialDamageAssessment/FeatureServer/0', {
@@ -77,58 +59,42 @@
              }).addTo(map);
 
 
-             var countriesGeoJson = L.geoJson(countries, {
-                 onEachFeature: popup,
-                 style: cssStyles.countryStyleOn
-             }).addTo(map);
-
-             // var pwGeoJson = L.geoJson(pw, {}).addTo(map);
+            var contriesGeoJsonSwitcher = document.getElementById('countriesGeoJson');
+            var countriesGeoJsonLayer  = geoJsonLayersFromFile.creategeoJsonLayerFromFile(countries,cssStyles.countryStyleOn);
+            countriesGeoJsonLayer.addTo(map);            
+            geoJsonLayersFromFile.hookupgeoJsonLayerFromFileToggle(contriesGeoJsonSwitcher,cssStyles.countryStyleOn,cssStyles.countryStyleOff,countriesGeoJsonLayer)
 
 
+            var pwGeoJsonSwitcher = document.getElementById('pwGeoJson');
+            var pwGeoJsonLayer  = geoJsonLayersFromFile.creategeoJsonLayerFromFileCircle(pw,cssStyles.pwStyleOn).addTo(map);;          
+            geoJsonLayersFromFile.hookupgeoJsonLayerFromFileToggle(pwGeoJsonSwitcher,cssStyles.pwStyleOn,cssStyles.pwStyleOff,pwGeoJsonLayer)
 
-             var pwGeoJson = L.geoJson(pw, {
-                 onEachFeature: popup,
-                 pointToLayer: function(feature, latlng) {
-                     return L.circleMarker(latlng, cssStyles.pwStyleOn);
-                 }
-             }).addTo(map);
-
-
-
-             var yellowstoneBuilding = yellowstoneBuildings;
-             var yellowstoneBuildingGeoJson = L.geoJson(yellowstoneBuilding, {
-                 pointToLayer: function(feature, latlng) {
-                     return L.circleMarker(latlng, cssStyles.yellowStoneStyleOn);
-                 }
-             }).addTo(map);
+            
+            var yellowRestGeoJson = document.getElementById('yellowRestGeoJson');
+            var yellowstoneBuildingLayer  = geoJsonLayersFromFile.creategeoJsonLayerFromFileCircle(yellowstoneBuildings,cssStyles.yellowStoneStyleOn).addTo(map);
+            geoJsonLayersFromFile.hookupgeoJsonLayerFromFileToggle(yellowRestGeoJson,cssStyles.yellowStoneStyleOn,cssStyles.yellowStoneStyleOff,yellowstoneBuildingLayer)
+                       
 
 
-
-
-             var capitalCitiesGeoJson;
+             var capitalCitiesGeoJsonLayer;
              var jqxhr = $.ajax("http://gcaseycupp.github.io/LeafletTesting2/data/centralAmericaCapitalsNoVar.geo.json")
                  // var jqxhr = $.ajax( "http://gcaseycupp.github.io/LeafletTesting2/centralAmericaCapitalsNoVar.geo.json" )
                  .success(function(data) {
                      //  alert("in success");
                      var capitalCities = data;
-                     capitalCitiesGeoJson = L.geoJson(capitalCities, {
+                     capitalCitiesGeoJsonLayer = L.geoJson(capitalCities, {
                          pointToLayer: function(feature, latlng) {
                              return L.circleMarker(latlng, cssStyles.capCitiesStyleOn);
                          }
                      }).addTo(map);
 
-                     //  var capitalCitiesGeoJson = L.geoJson(capitalCities, {  
-                     //     style: capCitiesStyleOn                      
-                     // }).addTo(map);
+                      var capitalCitiesGeoJsonSwitcher = document.getElementById('capitalCitiesGeoJson');
+                      geoJsonLayersFromFile.hookupgeoJsonLayerFromFileToggle(capitalCitiesGeoJsonSwitcher,cssStyles.capCitiesStyleOn,cssStyles.capCitiesStyleOff,capitalCitiesGeoJsonLayer)
 
                  })
                  .fail(function(XMLHttpRequest, textStatus, errorThrown) {
                      alert("some error : " + errorThrown);
-                 })
-                 .always(function() {
-                     // alert( "complete" );
-                 });
-
+                 });           
 
 
              var precipitationWMS = L.tileLayer.wms('http://nowcoast.noaa.gov/wms/com.esri.wms.Esrimap/obs', {
@@ -143,86 +109,6 @@
                  opacity: 0.75
              }).addTo(map);
 
-
-
-
-             var contriesGeoJsonSwitcher = document.getElementById('countriesGeoJson');
-             document.getElementById('countriesGeoJson').onclick = function() {
-                 var enable = contriesGeoJsonSwitcher.className !== 'active';
-
-                 countriesGeoJson.eachLayer(function(layer) {
-
-                     if (enable) {
-                         layer.setStyle(cssStyles.countryStyleOn);
-                     } else {
-                         layer.setStyle(cssStyles.countryStyleOff);
-                     }
-
-                 });
-                 this.className = enable ? 'active' : '';
-                 return false;
-             };
-
-
-
-             var yellowRestGeoJsonElement = document.getElementById('yellowRestGeoJson');
-             document.getElementById('yellowRestGeoJson').onclick = function() {
-                 var enable = yellowRestGeoJsonElement.className !== 'active';
-
-                 yellowstoneBuildingGeoJson.eachLayer(function(layer) {
-
-                     if (enable) {
-                         layer.setStyle(cssStyles.yellowStoneStyleOn);
-                     } else {
-                         layer.setStyle(cssStyles.yellowStoneStyleOff);
-                     }
-
-                 });
-                 this.className = enable ? 'active' : '';
-                 return false;
-             };
-
-
-
-
-             var capitalCitiesGeoJsonElement = document.getElementById('capitalCitiesGeoJson');
-             document.getElementById('capitalCitiesGeoJson').onclick = function() {
-                 var enable = capitalCitiesGeoJsonElement.className !== 'active';
-
-                 capitalCitiesGeoJson.eachLayer(function(layer) {
-
-                     if (enable) {
-                         layer.setStyle(cssStyles.capCitiesStyleOn);
-                     } else {
-                         layer.setStyle(cssStyles.capCitiesStyleOff);
-                     }
-
-                 });
-
-                 this.className = enable ? 'active' : '';
-                 return false;
-             };
-
-
-
-             var pwGeoJsonSwitcher = document.getElementById('pwGeoJson');
-             document.getElementById('pwGeoJson').onclick = function() {
-                 var enable = pwGeoJsonSwitcher.className !== 'active';
-                 //countriesGeoJson.setOpacity(enable ? 1 : 0);
-
-                 pwGeoJson.eachLayer(function(layer) {
-
-                     if (enable) {
-                         layer.setStyle(cssStyles.pwStyleOn);
-                     } else {
-                         layer.setStyle(cssStyles.pwStyleOff);
-                     }
-
-                 });
-
-                 this.className = enable ? 'active' : '';
-                 return false;
-             };
 
 
 
