@@ -65,6 +65,11 @@
 
 
 
+             //https://github.com/calvinmetcalf/leaflet-ajax
+             // <script src="/js/leaflet-0.7.2/leaflet.ajax.min.js"></script>
+             // var geojsonLayer = new L.GeoJSON.AJAX("foo.geojson");       
+             // geojsonLayer.addTo(map);
+
              var capitalCitiesGeoJsonLayer;
              var jqxhr = $.ajax("http://gcaseycupp.github.io/LeafletTesting2/data/centralAmericaCapitalsNoVar.geo.json")
                  // var jqxhr = $.ajax( "http://gcaseycupp.github.io/LeafletTesting2/centralAmericaCapitalsNoVar.geo.json" )
@@ -87,40 +92,116 @@
 
 
 
-             function addSolrSpatialMarkers() {
+             function addSolrSpatialMarkerswithCluster() {
 
-                     uswellsSolrSpatial.response.docs.forEach(function(docs) {
+                     usWellsTeapot100.response.docs.forEach(function(docs) {
                          var coord = docs.bbox[0];
-                         //coord  = "POINT (-103.942501 40.536397)"
-                         console.log(typeof coord);
-                         //console.log(coord.substring(4, 10));
                          var lon = coord.substring(7, 17);
-                         var lat = coord.substring(19, 26)
-
-                         console.log('lon:' + lon + '   lat:' + lat);
-
+                         var lat = coord.substring(19, 26);
                          var coords = [];
                          coords.push(lat);
                          coords.push(lon);
                          var title = docs.api_s;
-                         //var pid = docs.PID;
-                         //var thumbnail = "<a href='http://digital.library.yorku.ca/islandora/object/" + pid + "' target='_blank'><img src='http://digital.library.yorku.ca/islandora/object/"+ pid +"/datastream/TN/view' /></a>";
                          var solrLayer = L.marker(coords);
                          solrSpatialMarkers.addLayer(solrLayer);
-                         map.addLayer(solrSpatialMarkers);
                      });
+
+                     map.addLayer(solrSpatialMarkers);
+
                  }
-                 // map.fitBounds(markers.getBounds());
+               
              var solrSpatialMarkers = L.markerClusterGroup();
-             addSolrSpatialMarkers();
+             addSolrSpatialMarkerswithCluster();
+
+
+
+            //  Only works in IE with following steps..
+            //     #1 - add this to MainAlt NavigatorSearchProxy  -
+            //                <system.webServer>
+            //                <httpProtocol>
+            //                  <customHeaders>
+            //                    <add name="Access-Control-Allow-Origin" value="*" />
+            //                  </customHeaders>
+            //                </httpProtocol>
+            //              </system.webServer>
+            //     # 2  -login to Main Alt Navigator site
+            //     # 3 - Open new IE Tab and open run 
+                
+            //  function addSolrSpatialMarkerswithClusterRest() {
+
+
+            //      var jqxhr = $.ajax({
+            //          url: "http://navigatorreleases.petroweb.com/MainAlt/NavigatorSearchProxy/ProxyHandler.ashx/US_Wells?q=chevron&fl=api_s,well_name_s,operator_s,bbox&security.info=true&rows=5000&wt=json",
+            //          xhrFields: {
+            //              withCredentials: true
+            //          },
+            //          success: function(data) {
+
+            //             data.response.docs.forEach(function(docs) {
+            //                 var coord = docs.bbox[0];
+            //                 var lon = coord.substring(7, 17);
+            //                 var lat = coord.substring(19, 26);
+            //                 var coords = [];
+            //                 coords.push(lat);
+            //                 coords.push(lon);
+            //                 var title = docs.api_s;
+            //                 var solrLayer = L.marker(coords);
+            //                 solrSpatialMarkersClusterRest.addLayer(solrLayer);
+            //             });
+
+            //             map.addLayer(solrSpatialMarkersClusterRest);
+
+            //          }
+            //      });
+            //  }
+            // var solrSpatialMarkersClusterRest = L.markerClusterGroup();
+            //  addSolrSpatialMarkerswithClusterRest();
+
+
+
+             
+
+             function addSolrSpatialMarkersGeoJson() {
+
+                 uswellsSolrSpatial.response.docs.forEach(function(docs) {
+                     var coord = docs.bbox[0];
+                     console.log(typeof coord);
+                     var lon = coord.substring(7, 17);
+                     var lat = coord.substring(19, 26)
+
+                     console.log('lon:' + lon + '   lat:' + lat);
+
+                     var coords = [];
+                     coords.push(lat);
+                     coords.push(lon);
+                     var title = docs.api_s;
+                     var solrLayer = L.circleMarker(coords);
+                     solrSpatialMarkersCircle.addLayer(solrLayer);
+                     map.addLayer(solrSpatialMarkersCircle);
+                 });
+             }
+      
+
+
 
              document.getElementById('weldCountyWellsSolrSpatialSwitcher').onclick = function() {
-
-
-
                  var enable = this.className !== 'active';
                  if (enable === true) {
-                     addSolrSpatialMarkers();
+                     addSolrSpatialMarkersGeoJson();
+                 } else {
+                     solrSpatialMarkersCircle.clearLayers();
+
+                 }
+                 this.className = enable ? 'active' : '';
+                 return false;
+             };
+
+
+
+             document.getElementById('teapotSolrClusterSwitcher').onclick = function() {
+                 var enable = this.className !== 'active';
+                 if (enable === true) {
+                     addSolrSpatialMarkerswithCluster();
                  } else {
                      solrSpatialMarkers.clearLayers();
 
@@ -169,7 +250,7 @@
                  return false;
              };
 
-
+             //L.control.layers().addTo(map);
 
              // document.getElementById('damageAssesmentEsriFeature').onclick = function() {
              //     var enable = this.className !== 'active';
