@@ -28,7 +28,7 @@
              //cssStyles.buildStyles();
 
              var mapDiv = document.getElementById('map');
-             var map = L.map(mapDiv).setView([35, -100], 4);
+             var map = L.map(mapDiv).setView([20, -90], 3);
 
 
              var openStretMapBase = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
