@@ -87,6 +87,24 @@
              opacity: 0,
              fillOpacity: 0.0
          };
+
+           var murderCaseyArcGISOnlineStyleOn = {
+             radius: 8,
+             fillColor: 'red',
+             color: '#000',
+             weight: 1,
+             opacity: 1,
+             fillOpacity: 0.8
+         };
+
+         var murderCaseyArcGISOnlineStyleOff = {
+             radius: 8,
+             fillColor: '#458B00',
+             color: '#000',
+             weight: 1,
+             opacity: 0,
+             fillOpacity: 0.0
+         };
          return {
 
 
@@ -100,6 +118,8 @@
              capCitiesStyleOff: capCitiesStyleOff,
              damageAssesmentStyleOn: damageAssesmentStyleOn,
              damageAssesmentStyleOff: damageAssesmentStyleOff,
+                murderCaseyArcGISOnlineStyleOn: murderCaseyArcGISOnlineStyleOn,
+             murderCaseyArcGISOnlineStyleOff: murderCaseyArcGISOnlineStyleOff,
              buildStyles: function() {
                  alert("building styles");
              }

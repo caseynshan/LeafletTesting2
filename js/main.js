@@ -48,6 +48,18 @@
              }).addTo(map);
 
 
+
+            var murderCaseyArcGISOnlineFeatureLayer = L.esri.featureLayer('http://services6.arcgis.com/BImkMn3KePzoClNZ/arcgis/rest/services/murdercities4/FeatureServer/0', {
+                 pointToLayer: function(feature, latlng) {
+                     var radius = feature.properties["murdersPer100k"]/3
+
+                    var style = cssStyles.murderCaseyArcGISOnlineStyleOn;
+                    style.radius = radius;
+                     return L.circleMarker(latlng, style );
+                 }
+             }).addTo(map);
+
+
              var contriesGeoJsonSwitcher = document.getElementById('countriesGeoJson');
              var countriesGeoJsonLayer = geoJsonLayersFromFile.creategeoJsonLayerFromFile(countries, cssStyles.countryStyleOn);
              countriesGeoJsonLayer.addTo(map);
@@ -249,6 +261,25 @@
                  this.className = enable ? 'active' : '';
                  return false;
              };
+
+
+
+             var murderCaseyArcGISOnlineFeatureElement = document.getElementById('murderCaseyArcGISOnlineFeature');
+             document.getElementById('murderCaseyArcGISOnlineFeature').onclick = function() {
+                 var enable = murderCaseyArcGISOnlineFeatureElement.className !== 'active';
+
+                 if (enable) {
+                     murderCaseyArcGISOnlineFeatureLayer.setStyle(cssStyles.murderCaseyArcGISOnlineStyleOn);
+                 } else {
+                     murderCaseyArcGISOnlineFeatureLayer.setStyle(cssStyles.murderCaseyArcGISOnlineStyleOff);
+                 }
+
+                 // });
+                 this.className = enable ? 'active' : '';
+                 return false;
+             };
+
+           
 
              //L.control.layers().addTo(map);
 
