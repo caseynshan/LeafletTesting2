@@ -224,10 +224,10 @@
 
 
 
-             var precipitationWMS = L.tileLayer.wms('http://nowcoast.noaa.gov/wms/com.esri.wms.Esrimap/obs', {
+             var precipitationWMS = L.tileLayer.wms('http://gis.srh.noaa.gov/arcgis/services/RIDGERadar/MapServer/WMSServer', {
                  format: 'image/png',
                  transparent: true,
-                 layers: 'RAS_RIDGE_NEXRAD',
+                 layers: '0',
                  opacity: 0.75
              }).addTo(map);
 
